@@ -30,7 +30,9 @@ export const dateLabel = (iso: string) => {
   const d = new Date(iso);
   return Number.isNaN(d.getTime())
     ? iso
-    : d.toLocaleString("en-GB", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+    : // Fixed time zone: the server (UTC on Vercel) and the visitor's browser must render
+      // identical text, otherwise React hydration fails for client components.
+      `${d.toLocaleString("en-GB", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "UTC" })} UTC`;
 };
 
 export const prettyVariable = (v: string) =>
