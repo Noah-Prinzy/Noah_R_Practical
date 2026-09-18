@@ -1,0 +1,269 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-09-18T11:49:04+0300",
+  "status": "PASS",
+  "counts": {
+    "pass": 29,
+    "fail": 0,
+    "pending": 0,
+    "total": 29
+  },
+  "dataset": {
+    "observations": 209,
+    "variables": 13,
+    "missing_cells": 33,
+    "duplicate_rows": 0,
+    "duplicate_iso3": 0,
+    "aggregate_rows_in_raw": 78,
+    "aggregate_rows_in_clean": 0
+  },
+  "plausibility_rules": [
+    {
+      "variable": "life_expectancy_years",
+      "min": 0,
+      "max": 100,
+      "rationale": "Years of life at birth must be positive and below the ~85-year human maximum observed nationally (100 as a hard ceiling)"
+    },
+    {
+      "variable": "fertility_rate",
+      "min": 0,
+      "max": 15,
+      "rationale": "Births per woman cannot be negative; no country has recorded a national rate above ~8"
+    },
+    {
+      "variable": "population",
+      "min": 1,
+      "max": null,
+      "rationale": "A country must have at least one inhabitant"
+    },
+    {
+      "variable": "gdp_per_capita_usd",
+      "min": 0,
+      "max": null,
+      "rationale": "Output per person cannot be negative"
+    },
+    {
+      "variable": "urban_pop_pct",
+      "min": 0,
+      "max": 100,
+      "rationale": "A percentage of the population must lie in 0-100"
+    },
+    {
+      "variable": "health_exp_per_capita_usd",
+      "min": 0,
+      "max": null,
+      "rationale": "Spending cannot be negative"
+    },
+    {
+      "variable": "co2_per_capita_t",
+      "min": 0,
+      "max": null,
+      "rationale": "Emissions per person cannot be negative"
+    }
+  ],
+  "checks": [
+    {
+      "id": "QA01",
+      "category": "Size",
+      "check": "At least 50 observations",
+      "status": "PASS",
+      "detail": "209 countries"
+    },
+    {
+      "id": "QA02",
+      "category": "Size",
+      "check": "At least 5 analytical variables",
+      "status": "PASS",
+      "detail": "7 numeric indicators observed for 50+ countries (13 columns in total)"
+    },
+    {
+      "id": "QA03",
+      "category": "Structure",
+      "check": "All required columns present",
+      "status": "PASS",
+      "detail": "13/13 present"
+    },
+    {
+      "id": "QA04",
+      "category": "Uniqueness",
+      "check": "ISO3 codes unique",
+      "status": "PASS",
+      "detail": "0 duplicated ISO3 codes"
+    },
+    {
+      "id": "QA05",
+      "category": "Uniqueness",
+      "check": "Country names unique",
+      "status": "PASS",
+      "detail": "0 duplicated country names"
+    },
+    {
+      "id": "QA06",
+      "category": "Uniqueness",
+      "check": "No duplicated rows",
+      "status": "PASS",
+      "detail": "0 duplicated rows"
+    },
+    {
+      "id": "QA07",
+      "category": "Aggregates",
+      "check": "No aggregate regions in cleaned data",
+      "status": "PASS",
+      "detail": "78 aggregate rows removed; 0 expected in cleaned data, found 0"
+    },
+    {
+      "id": "QA08",
+      "category": "Types",
+      "check": "Indicator variables are numeric",
+      "status": "PASS",
+      "detail": "7/7 numeric"
+    },
+    {
+      "id": "QA09",
+      "category": "Types",
+      "check": "Region and income level are factors",
+      "status": "PASS",
+      "detail": "region: factor; income_level: factor"
+    },
+    {
+      "id": "QA10",
+      "category": "Missingness",
+      "check": "Core analysis variables complete",
+      "status": "PASS",
+      "detail": "0 missing values across country, iso3, region, income_level, gdp_per_capita_usd, life_expectancy_years"
+    },
+    {
+      "id": "QA11",
+      "category": "Missingness",
+      "check": "No variable more than 20% missing",
+      "status": "PASS",
+      "detail": "33 missing cells in total (1.21%); highest: health_exp_per_capita_usd 10.0%"
+    },
+    {
+      "id": "QA12",
+      "category": "Plausibility",
+      "check": "life_expectancy_years within [0, 100]",
+      "status": "PASS",
+      "detail": "0 out-of-range values; observed range 18.82 to 85.75"
+    },
+    {
+      "id": "QA13",
+      "category": "Plausibility",
+      "check": "fertility_rate within [0, 15]",
+      "status": "PASS",
+      "detail": "0 out-of-range values; observed range 0.68 to 6.255"
+    },
+    {
+      "id": "QA14",
+      "category": "Plausibility",
+      "check": "population within [1, Inf]",
+      "status": "PASS",
+      "detail": "0 out-of-range values; observed range 9,992 to 1,425,000,000"
+    },
+    {
+      "id": "QA15",
+      "category": "Plausibility",
+      "check": "gdp_per_capita_usd within [0, Inf]",
+      "status": "PASS",
+      "detail": "0 out-of-range values; observed range 301.8 to 226,100"
+    },
+    {
+      "id": "QA16",
+      "category": "Plausibility",
+      "check": "urban_pop_pct within [0, 100]",
+      "status": "PASS",
+      "detail": "0 out-of-range values; observed range 14.69 to 100"
+    },
+    {
+      "id": "QA17",
+      "category": "Plausibility",
+      "check": "health_exp_per_capita_usd within [0, Inf]",
+      "status": "PASS",
+      "detail": "0 out-of-range values; observed range 15.86 to 12,590"
+    },
+    {
+      "id": "QA18",
+      "category": "Plausibility",
+      "check": "co2_per_capita_t within [0, Inf]",
+      "status": "PASS",
+      "detail": "0 out-of-range values; observed range 0 to 78.73"
+    },
+    {
+      "id": "QA19",
+      "category": "Export",
+      "check": "cleaned_data.csv matches the analysed data",
+      "status": "PASS",
+      "detail": "209 x 13 on disk vs 209 x 13 in memory"
+    },
+    {
+      "id": "QA20",
+      "category": "Export",
+      "check": "web_extracted_data.csv is the raw extraction",
+      "status": "PASS",
+      "detail": "295 rows (incl. aggregates) - distinct from the 209-row cleaned file"
+    },
+    {
+      "id": "QA21",
+      "category": "Statistics",
+      "check": "Key statistical results are finite numbers",
+      "status": "PASS",
+      "detail": "cor_log=0.792; cor_spearman=0.846; slope=9.86; r_squared=0.627; anova_p=3.44e-28"
+    },
+    {
+      "id": "QA22",
+      "category": "Outputs",
+      "check": "web_extracted_data.csv exists and is non-empty",
+      "status": "PASS",
+      "detail": "58.8 KB"
+    },
+    {
+      "id": "QA23",
+      "category": "Outputs",
+      "check": "cleaned_data.csv exists and is non-empty",
+      "status": "PASS",
+      "detail": "33.7 KB"
+    },
+    {
+      "id": "QA24",
+      "category": "Outputs",
+      "check": "figures/figure1.png exists and is non-empty",
+      "status": "PASS",
+      "detail": "45.9 KB"
+    },
+    {
+      "id": "QA25",
+      "category": "Outputs",
+      "check": "figures/figure2.png exists and is non-empty",
+      "status": "PASS",
+      "detail": "41.3 KB"
+    },
+    {
+      "id": "QA26",
+      "category": "Outputs",
+      "check": "figures/figure3.png exists and is non-empty",
+      "status": "PASS",
+      "detail": "75.6 KB"
+    },
+    {
+      "id": "QA27",
+      "category": "Outputs",
+      "check": "figures/figure4.png exists and is non-empty",
+      "status": "PASS",
+      "detail": "44.0 KB"
+    },
+    {
+      "id": "QA28",
+      "category": "Outputs",
+      "check": "figures/figure5_regression_diagnostics.png exists and is non-empty",
+      "status": "PASS",
+      "detail": "66.6 KB"
+    },
+    {
+      "id": "QA29",
+      "category": "Outputs",
+      "check": "final_report.pdf exists and is non-empty",
+      "status": "PASS",
+      "detail": "684.7 KB, built 2026-09-18 11:49 by build_report.R"
+    }
+  ]
+}
