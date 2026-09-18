@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
-  "run_started": "2026-09-18T10:44:02+0300",
-  "run_finished": "2026-09-18T10:44:12+0300",
+  "run_started": "2026-09-18T14:53:08+0300",
+  "run_finished": "2026-09-18T14:53:27+0300",
   "extraction_date": "2026-09-18",
   "data_year": 2022,
   "r_version": "R version 4.6.1 (2026-06-24 ucrt)",
@@ -137,9 +137,9 @@
       "file": "final_report.pdf",
       "exists": true,
       "bytes": 701166,
-      "md5": "26524dbbba654dad5d27da2082bde555"
+      "md5": "d31e8348861ebe97bf152198841aa756"
     }
   ],
   "reproducibility_note": "The code is fully reproducible: running `Rscript build_report.R` (or main_analysis.R for the analysis only) re-extracts, cleans, analyses and re-exports everything using relative paths and a fixed seed. The data are fetched live from the World Bank API, which revises WDI values over time, so a later run may return slightly different numbers; the extraction date, data year, indicator codes and file checksums recorded here identify exactly which vintage produced these outputs.",
-  "report_built": "2026-09-18T10:44:18+0300"
+  "report_built": "2026-09-18T14:53:34+0300"
 }

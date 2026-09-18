@@ -44,3 +44,28 @@ requirement-by-requirement audit.
 - `run_project.bat` runs the whole project with one command.
 - `README.md` explains how to run, the pipeline, data, methods, QA, reproducibility, dependencies, limitations and packaging.
 - `frontend/README.md` documents the data contract.
+
+---
+
+# Version 2.1: premium motion and data-story frontend
+
+The R pipeline, data, statistics, QA and report are **unchanged** in V2.1 (verified: all result
+fingerprints and `cleaned_data.csv` are byte-identical before and after). Only `frontend/` changed.
+
+- **Story structure:** 9 chapters / 14 scenes. New scenes: *The short answer*, *Relationship*
+  (Figure 5 pinned beside eight analytical steps), *Group differences*, *Robustness*, a dedicated
+  *Exam Section A* scene and a *Closing* scene.
+- **Motion system:** central tokens in `frontend/lib/motion.ts`; three levels (global / section /
+  micro); Motion (framer-motion) is the only animation engine; no GSAP.
+- **Progressive enhancement:** content is visible in the server HTML; animations apply only once
+  scripts run (fixes the V2 hero that was invisible until JavaScript loaded).
+- **Accessibility:** full reduced-motion experience, skip link, `aria-current` chapter navigation,
+  reading-progress bar, Radix dialogs (focus trap, focus return, Escape, scroll lock), 44 px touch
+  targets, contrast fixes.
+- **Static build:** the page is rendered once at build time from the R outputs, so the deployed
+  site is plain static files and never needs R. A production build fails if the R outputs are missing.
+- **One new dependency:** `@radix-ui/react-dialog` (MIT).
+- **Git:** repository initialised locally (no remote); `.gitattributes` keeps generated data files
+  byte-identical so the manifest checksums stay valid.
+
+See `frontend/README.md` for the motion system, scene list and adapted open-source patterns.

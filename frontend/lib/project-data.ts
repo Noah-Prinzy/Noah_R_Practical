@@ -229,6 +229,8 @@ export type ProjectData = {
   reportAvailable: boolean;
   /** Changes whenever R regenerates the outputs; appended to asset URLs to avoid stale cached figures. */
   version: string;
+  /** Pixel size of each exported figure (read from the PNG header) so layout space is reserved. */
+  figureSizes: Record<string, { width: number; height: number }>;
 };
 
 export type LoadResult = { ok: true; data: ProjectData } | { ok: false; problems: string[] };
@@ -281,13 +283,49 @@ export async function loadProjectData(): Promise<LoadResult> {
     .then((s) => s.size > 0)
     .catch(() => false);
 
+  const figureSizes: ProjectData["figureSizes"] = {};
+  for (const f of summary.figures) {
+    const size = await pngSize(path.join(PROJECT_DIR, basename(f.file)));
+    if (size) figureSizes[f.id] = size;
+  }
+
   return {
     ok: true,
-    data: { summary, qa, manifest, countries, reportAvailable, version: encodeURIComponent(summary.generated_at) },
+    data: { summary, qa, manifest, countries, reportAvailable, version: encodeURIComponent(summary.generated_at), figureSizes },
   };
+}
+
+/**
+ * Build-time guard: the site is rendered statically, so a production build must
+ * never silently ship without the R outputs. In development the page shows the
+ * problems instead (see app/(public-pages)/page.tsx).
+ */
+export async function loadProjectDataOrThrow(): Promise<LoadResult> {
+  const result = await loadProjectData();
+  if (!result.ok && process.env.NODE_ENV === "production") {
+    throw new Error(
+      "Cannot build the dashboard - the R outputs are missing or inconsistent:\n  - " +
+        result.problems.join("\n  - ") +
+        "\nRun `Rscript build_report.R` in the project folder, then build again.",
+    );
+  }
+  return result;
+}
+
+const basename = (file: string) => file.split("/").pop() ?? file;
+
+/** Width/height from a PNG's IHDR chunk (bytes 16-23). */
+async function pngSize(file: string): Promise<{ width: number; height: number } | null> {
+  try {
+    const buf = await readFile(file);
+    if (buf.length < 24 || buf.toString("ascii", 1, 4) !== "PNG") return null;
+    return { width: buf.readUInt32BE(16), height: buf.readUInt32BE(20) };
+  } catch {
+    return null;
+  }
 }
 
 /** Public URL of an R output file (figures are exported under their base name). */
 export function assetUrl(file: string, version: string) {
-  return `/project/${file.split("/").pop()}?v=${version}`;
+  return `/project/${basename(file)}?v=${version}`;
 }

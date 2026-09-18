@@ -1,6 +1,6 @@
 # Exam compliance matrix
 
-Generated automatically by `build_report.R` on 2026-09-18 10:44 from the outputs of this run. Each status is derived from a check on the actual files and R objects; `ADDITIONAL` marks work beyond the exam requirements. The dashboard build (`npm run build`) is not verified by R.
+Generated automatically by `build_report.R` on 2026-09-18 14:53 from the outputs of this run. Each status is derived from a check on the actual files and R objects; `ADDITIONAL` marks work beyond the exam requirements. The dashboard build (`npm run build`) is not verified by R.
 
 | Section | Requirement | Location | Evidence | Status |
 | --- | --- | --- | --- | --- |

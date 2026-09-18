@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Urbanist } from "next/font/google";
+import { MotionProvider } from "@/components/motion/motion-provider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -18,8 +19,9 @@ const urbanist = Urbanist({
 });
 
 export const metadata: Metadata = {
-  title: "R Practical Exam | Interactive Data Story",
-  description: "Interactive presentation layer for the R Practical Exam World Bank analysis project.",
+  title: "From Raw Data to Statistical Insight | R Practical Exam",
+  description:
+    "An interactive research story for the R Practical Exam: World Bank data extracted, cleaned, analysed and visualised in R, presented from the exported results.",
 };
 
 export default function RootLayout({
@@ -28,11 +30,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    // `js` is added before first paint so entrance states only apply when scripts run.
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} ${urbanist.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+      </head>
+      <body className="min-h-full flex flex-col">
+        <MotionProvider>{children}</MotionProvider>
+      </body>
     </html>
   );
 }

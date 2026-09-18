@@ -12,23 +12,67 @@ main_analysis.R / build_report.R  ──writes──▶  frontend/public/project
 
 ```bash
 npm install
-npm run dev        # http://localhost:3000
+npm run dev        # development: http://localhost:3000 (re-reads the R outputs on every request)
+npm run build      # production: renders the page ONCE from the R outputs (static HTML)
+npm run start      # serve the production build
 ```
 
-Production: `npm run build`, then `npm run start`. The page reads the R outputs on each request
-(`dynamic = "force-dynamic"`), so re-running the R analysis updates the dashboard without a rebuild.
+**Data flow:** R runs locally → JSON / CSV / PNG / PDF in `public/project/` → `npm run build`
+renders a static page → any static host / CDN. The deployed site never needs R. After re-running
+the R analysis, rebuild so the static page picks up the new results.
 
-If the data files are missing, the page shows what is missing and how to regenerate it, rather
-than showing empty or invented numbers. To regenerate, run `Rscript build_report.R` in the
-project folder.
+**Missing data:** in development the page lists which R outputs are missing and how to regenerate
+them. A production build **fails loudly** instead, so a site can never ship without its data.
+Regenerate with `Rscript build_report.R` in the project folder.
 
-## Sections
+## Story structure (9 chapters, 14 scenes)
 
-Overview · data pipeline · key indicators · the four required figures (plus the diagnostic figure,
-with a full-screen view) · advanced analysis (correlation, regression, ANOVA and Welch's ANOVA,
-outliers, sensitivity, group tables, Section A) · country explorer (search, income and region
-filters, sortable columns, detail panel) · data quality · methodology · limitations · report and
-reproducibility.
+| Chapter | Scenes |
+| --- | --- |
+| Overview | 01 Hero · 02 The short answer |
+| Data | 03 Data pipeline (scroll-drawn rail) · 04 Dataset at a glance |
+| Figures | 05 Required visualisations (the four R PNGs, unaltered) |
+| Analysis | 06 Relationship (sticky Figure 5 + analytical steps) · 07 Group differences · 08 Robustness |
+| Explorer | 09 Country explorer (search, filters, sort, detail drawer) |
+| Quality | 10 Data quality (QA sequence) |
+| Method | 11 Methodology (scroll-drawn timeline) · 12 Exam Section A |
+| Limits | 13 Limitations |
+| Report | 14 Closing + report & reproducibility |
+
+## Motion system
+
+All timings live in `lib/motion.ts` (durations micro 150 ms · fast 250 ms · base 450 ms · large
+700 ms · cinematic ~1.2 s; easings out / inOut / in; springs ui / soft; stagger caps).
+
+- **L1 global:** hero entrance and parallax, closing scene, reading-progress bar, navbar pill, Lenis.
+- **L2 section:** masked headings, figure unmasking, counters, pipeline/methodology rails, sticky
+  steps, QA sequence, sensitivity dots.
+- **L3 micro:** label-roll buttons, arrow nudges, hover lifts, filters, sort arrows, chevrons.
+
+Primitives (`components/motion/primitives.tsx`): `Reveal` (rise / fade / clip / stagger / scale),
+`MaskText`, `StatNumber`. They follow a progressive-enhancement contract: the server HTML is fully
+visible; entrance states apply only after an inline script marks `html.js` and the component
+hydrates; a CSS fallback reveals everything after 2.5 s if scripts fail.
+
+**Reduced motion** (`prefers-reduced-motion`): `MotionConfig reducedMotion="user"`, no entrance
+hiding, counters show final values, no parallax, no blur, no sticky storytelling (stacked layout),
+rails shown complete, no scroll-cue pulse; Lenis disables smoothing.
+
+**Dialogs** (figure viewer, country drawer / mobile bottom sheet) use Radix Dialog for focus
+trapping, focus return, Escape, scroll lock and ARIA; `data-lenis-prevent` keeps Lenis out.
+
+### Adapted open-source patterns
+
+| Pattern | Source | Licence | Adaptation |
+| --- | --- | --- | --- |
+| Number Ticker | Magic UI | MIT | → `StatNumber`: server-rendered final value, reduced motion, screen-reader text |
+| Blur Fade / Text Animate | Magic UI | MIT | → `Reveal` / `MaskText`: masked line reveal, desktop-only blur |
+| InView / TextEffect / AnimatedNumber / ScrollProgress | Motion Primitives | MIT | → viewport triggers, progress bar |
+| Label-roll button, grid-rows accordion, spring entrances | Estate template (supplied) | project template | → `RollButton`, QA expanders, motion tokens |
+| Dialog | Radix UI (`@radix-ui/react-dialog`) | MIT | npm dependency |
+
+Timeline and sticky-scroll ideas were taken as visual inspiration only; no code was copied from
+sources with unclear licensing.
 
 ## Data contract (`public/project/`, schema_version `1.0`)
 
@@ -69,5 +113,5 @@ built. TypeScript types that mirror them exactly are in `lib/project-data.ts`. T
 ## Stack
 
 Next.js 16.2.9 (App Router, Turbopack), React 19.2.4, TypeScript 5.9, Tailwind CSS 4.3,
-framer-motion 12 (reveal animations; honours reduced-motion), lenis (smooth scrolling) and
-lucide-react (icons). No other dependencies were added to the template.
+framer-motion 12 (the only animation engine), lenis (smooth scrolling), lucide-react (icons) and
+@radix-ui/react-dialog (accessible dialogs, added in V2.1 - the only dependency added to the template).

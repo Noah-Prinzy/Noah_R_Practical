@@ -1,6 +1,6 @@
 import { Download, ExternalLink, FileText } from "lucide-react";
-import { Reveal } from "@/components/reveal";
-import { Card, Section, SectionHeading } from "@/components/ui";
+import { Reveal } from "@/components/motion/primitives";
+import { Card, RollButton, Section, SectionHeading } from "@/components/ui";
 import type { AnalysisSummary, Manifest } from "@/lib/project-data";
 import { dateLabel } from "@/lib/format";
 
@@ -18,8 +18,10 @@ export function Reproducibility({ summary, manifest, reportAvailable }: { summar
   ];
 
   return (
-    <Section id="reproducibility">
+    <Section id="reproducibility" labelledBy="reproducibility-title">
       <SectionHeading
+        id="reproducibility-title"
+        scene="14"
         eyebrow="REPORT · SOURCE · REPRODUCIBILITY"
         title="Read the report, rerun the analysis"
         intro="This dashboard is a presentation layer: it performs no statistical calculation of its own. The details below come from reproducibility_manifest.json, written by the same R run."
@@ -35,9 +37,11 @@ export function Reproducibility({ summary, manifest, reportAvailable }: { summar
             </p>
           </div>
           {reportAvailable ? (
-            <a href="/project/final_report.pdf" target="_blank" rel="noreferrer" className="inline-flex shrink-0 items-center gap-2 self-start rounded-full bg-white px-5 py-3 text-sm font-medium text-zinc-950 hover:bg-zinc-100 md:self-auto">
-              <FileText className="size-4" /> View Final Report
-            </a>
+            <div className="shrink-0 self-start md:self-auto">
+              <RollButton href="/project/final_report.pdf" external variant="light" icon={<FileText aria-hidden className="size-4" />}>
+                View Final Report
+              </RollButton>
+            </div>
           ) : (
             <p className="max-w-xs text-sm text-amber-300">final_report.pdf has not been built yet. Run <code>Rscript build_report.R</code> in the project folder.</p>
           )}
@@ -77,13 +81,13 @@ export function Reproducibility({ summary, manifest, reportAvailable }: { summar
               {manifest.outputs.map((o) => (
                 <li key={o.file} className="flex items-center justify-between gap-3 text-xs">
                   <span className={o.exists ? "text-zinc-800" : "text-red-700"}>{o.file}</span>
-                  <span className="font-mono text-zinc-400">{o.md5 ? o.md5.slice(0, 10) : "missing"}</span>
+                  <span className="font-mono text-zinc-500">{o.md5 ? o.md5.slice(0, 10) : "missing"}</span>
                 </li>
               ))}
             </ul>
             <div className="mt-6 flex flex-wrap gap-2">
               {["analysis_summary.json", "qa_report.json", "reproducibility_manifest.json", "data_dictionary.csv"].map((f) => (
-                <a key={f} href={`/project/${f}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-full border border-zinc-300 px-3 py-1.5 text-xs text-zinc-700 hover:bg-zinc-50">
+                <a key={f} href={`/project/${f}`} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-zinc-300 px-4 text-xs text-zinc-700 hover:bg-zinc-50">
                   <Download className="size-3.5" /> {f}
                 </a>
               ))}

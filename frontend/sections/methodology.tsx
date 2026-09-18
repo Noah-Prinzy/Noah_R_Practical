@@ -1,93 +1,100 @@
-import { Reveal } from "@/components/reveal";
-import { Card, Section, SectionHeading } from "@/components/ui";
+import { ScrollRail } from "@/components/scroll-rail";
+import { Section, SectionHeading } from "@/components/ui";
 import type { AnalysisSummary, Manifest } from "@/lib/project-data";
 import { prettyVariable } from "@/lib/format";
 
 const methods = (nDescriptive: number): [string, string][] => [
-  ["Descriptive statistics", `Mean, median, minimum, maximum and standard deviation for ${nDescriptive} numeric indicators (missing values excluded pairwise).`],
-  ["Group summaries", "Life expectancy, GDP, fertility and urbanisation summarised by World Bank region and income group."],
-  ["One-way ANOVA", "Tests whether mean life expectancy differs between regions; η² gives the share of variation explained. Welch's ANOVA repeats the test without assuming equal variances."],
-  ["Pearson correlation", "Linear association between log₁₀ GDP per capita and life expectancy, with a 95% confidence interval; also reported on the raw dollar scale."],
-  ["Spearman correlation", "Rank-based association that needs neither linearity nor normality, used as a robustness check."],
-  ["Linear regression", "OLS of life expectancy on log₁₀ GDP per capita. The slope is years per ten-fold GDP difference; diagnostics check curvature, residual normality, leverage and Cook's distance."],
-  ["IQR outlier detection", "Values beyond Q1 − 1.5·IQR or Q3 + 1.5·IQR are flagged. Quartiles resist skew, unlike mean ± SD rules. Flagged values are kept."],
-  ["Sensitivity analysis", "Correlation and regression are re-estimated without life-expectancy outliers, GDP outliers and influential points."],
+  ["Descriptive statistics", `Mean, median, minimum, maximum and SD for ${nDescriptive} numeric indicators (missing values excluded pairwise).`],
+  ["Group summaries + ANOVA", "Life expectancy by region and income group; one-way ANOVA with η², repeated as Welch's ANOVA without the equal-variance assumption."],
+  ["Pearson & Spearman", "Linear association on raw and log₁₀ GDP with a 95% CI, plus a rank-based check that needs neither linearity nor normality."],
+  ["Linear regression", "OLS of life expectancy on log₁₀ GDP; diagnostics for curvature, residual normality, leverage and Cook's distance."],
+  ["IQR outliers", "Values beyond Q1 − 1.5·IQR or Q3 + 1.5·IQR are flagged and kept. Quartiles resist skew, unlike mean ± SD rules."],
+  ["Sensitivity analysis", "Correlation and regression re-estimated without life-expectancy outliers, GDP outliers and influential points."],
 ];
 
+/** Scene 11. How and why each result was produced, as a scroll-drawn timeline. */
 export function Methodology({ summary, manifest }: { summary: AnalysisSummary; manifest: Manifest }) {
   const d = summary.dataset;
   return (
-    <Section id="methodology">
+    <Section id="methodology" labelledBy="methodology-title">
       <SectionHeading
+        id="methodology-title"
+        scene="11"
         eyebrow="METHODOLOGY"
         title="How the results were produced"
-        intro="A concise account of the data source, extraction, cleaning, statistical methods and figure choices. The final report gives the full detail."
+        intro="The reasoning behind each stage. The final report gives the full detail, including every table."
       />
-
-      <div className="mt-12 grid gap-5 lg:grid-cols-3">
-        <Reveal>
-          <Card className="h-full">
-            <h3 className="text-base font-semibold text-zinc-950">Data source</h3>
-            <p className="mt-2 text-sm leading-6 text-zinc-600">
-              {summary.project.source}: official, public and free to use without an account. Indicators for {summary.project.data_year}:{" "}
-              {Object.values(d.indicator_codes).map(prettyVariable).join(", ")}.
-            </p>
-            <p className="mt-3 text-xs leading-5 text-zinc-500">Why {summary.project.data_year}: {manifest.source.year_rationale}.</p>
-          </Card>
-        </Reveal>
-        <Reveal delay={0.04}>
-          <Card className="h-full">
-            <h3 className="text-base font-semibold text-zinc-950">Extraction</h3>
-            <p className="mt-2 text-sm leading-6 text-zinc-600">
-              {d.indicators + 1} HTTP requests to the World Bank v2 API (one for country metadata, one per indicator), parsed with jsonlite
-              and reshaped into one row per economy: {d.raw_rows} rows × {d.raw_columns} columns, saved unchanged as web_extracted_data.csv.
-            </p>
-            <p className="mt-3 text-xs leading-5 text-zinc-500">{manifest.source.error_handling}.</p>
-          </Card>
-        </Reveal>
-        <Reveal delay={0.08}>
-          <Card className="h-full">
-            <h3 className="text-base font-semibold text-zinc-950">Cleaning</h3>
-            <ol className="mt-2 space-y-1.5 text-sm leading-6 text-zinc-600">
-              {d.cleaning_log.slice(1).map((s) => (
-                <li key={s.step}>
-                  <span className="tabular-nums text-zinc-400">{s.rows_after}</span> · {s.note}
-                </li>
-              ))}
-            </ol>
-            <p className="mt-3 text-xs leading-5 text-zinc-500">
-              Removed for missing core values: {d.countries_dropped_missing.join("; ")}. No values were imputed.
-            </p>
-          </Card>
-        </Reveal>
-      </div>
-
-      <Reveal className="mt-5">
-        <Card>
-          <h3 className="text-base font-semibold text-zinc-950">Statistical methods</h3>
-          <dl className="mt-4 grid gap-x-8 gap-y-4 md:grid-cols-2">
-            {methods(summary.descriptive_statistics.length).map(([name, text]) => (
-              <div key={name}>
-                <dt className="text-sm font-medium text-zinc-900">{name}</dt>
-                <dd className="mt-0.5 text-sm leading-6 text-zinc-600">{text}</dd>
-              </div>
-            ))}
-          </dl>
-        </Card>
-      </Reveal>
-
-      <Reveal className="mt-5">
-        <Card>
-          <h3 className="text-base font-semibold text-zinc-950">Why each figure</h3>
-          <ul className="mt-4 grid gap-3 md:grid-cols-2">
-            {summary.figures.map((f) => (
-              <li key={f.id} className="rounded-xl bg-zinc-50 px-4 py-3 text-sm leading-6 text-zinc-600">
-                <span className="font-medium text-zinc-900">Figure {f.number}, {f.type.toLowerCase()}{f.required ? "" : " (additional)"}:</span> {f.purpose}
-              </li>
-            ))}
-          </ul>
-        </Card>
-      </Reveal>
+      <ScrollRail
+        label="Methodology timeline"
+        items={[
+          {
+            title: "Source",
+            text: `${summary.project.source}: official, public and free to use without an account. Indicators for ${summary.project.data_year}: ${Object.values(d.indicator_codes)
+              .map(prettyVariable)
+              .join(", ")}.`,
+            fact: `Why ${summary.project.data_year}?`,
+            aside: <p className="text-xs leading-5 text-zinc-500">{manifest.source.year_rationale}.</p>,
+          },
+          {
+            title: "Extraction",
+            text: `${d.indicators + 1} HTTP requests to the World Bank v2 API, parsed with jsonlite and reshaped to one row per economy (${d.raw_rows} × ${d.raw_columns}), saved unchanged as web_extracted_data.csv.`,
+            aside: <p className="text-xs leading-5 text-zinc-500">{manifest.source.error_handling}.</p>,
+          },
+          {
+            title: "Cleaning",
+            text: `Removed for missing core values, not imputed: ${d.countries_dropped_missing.join("; ")}.`,
+            fact: `${d.raw_rows} → ${d.observations} rows`,
+            aside: (
+              <ol className="space-y-1 text-xs leading-5 text-zinc-500">
+                {d.cleaning_log.slice(1).map((s) => (
+                  <li key={s.step}>
+                    <span className="tabular-nums text-zinc-700">{s.rows_after}</span> · {s.note}
+                  </li>
+                ))}
+              </ol>
+            ),
+          },
+          {
+            title: "Analysis",
+            text: "Each method answers a specific part of the research question and is checked before its result is reported.",
+            aside: (
+              <dl className="grid gap-x-6 gap-y-3 sm:grid-cols-2">
+                {methods(summary.descriptive_statistics.length).map(([name, text]) => (
+                  <div key={name}>
+                    <dt className="text-sm font-medium text-zinc-900">{name}</dt>
+                    <dd className="mt-0.5 text-xs leading-5 text-zinc-600">{text}</dd>
+                  </div>
+                ))}
+              </dl>
+            ),
+          },
+          {
+            title: "Visualisation",
+            text: "Each figure was chosen for the job it does:",
+            aside: (
+              <ul className="space-y-1.5 text-xs leading-5 text-zinc-600">
+                {summary.figures.map((f) => (
+                  <li key={f.id}>
+                    <span className="font-medium text-zinc-900">
+                      Figure {f.number}, {f.type.toLowerCase()}
+                      {f.required ? "" : " (additional)"}:
+                    </span>{" "}
+                    {f.purpose}
+                  </li>
+                ))}
+              </ul>
+            ),
+          },
+          {
+            title: "Report",
+            text: "build_report.R runs the whole analysis again and writes final_report.pdf from that single run, so the report and these pages can never disagree.",
+          },
+          {
+            title: "Dashboard",
+            text: "This site is a presentation layer. It is built from the exported JSON, CSV, PNG and PDF files and performs no statistical calculation of its own.",
+          },
+        ]}
+      />
     </Section>
   );
 }

@@ -3,6 +3,10 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --accent: #2a78d6;
+  --accent-strong: #1c5cab;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 @theme inline {
@@ -10,13 +14,6 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #ffffff;
-    --foreground: #171717;
-  }
 }
 
 * {
@@ -34,4 +31,64 @@ body {
 
 html {
   color-scheme: light;
+}
+
+/* One consistent, never-animated keyboard focus ring. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------------------------------------------------------------------------
+   Progressive-enhancement entrance states (see components/motion/primitives.tsx)
+   Server HTML is always visible. Only when scripts run (`html.js`) and the user
+   has not asked for reduced motion are elements hidden until they hydrate; the
+   fallback animation reveals them after 2.5s if hydration never happens.
+   --------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-anim]:not([data-anim="mask"]):not([data-anim="stagger"]):not([data-anim="clip"]):not([data-anim-ready]),
+  .js [data-anim="clip"]:not([data-anim-ready]),
+  .js [data-anim="stagger"]:not([data-anim-ready]) [data-stagger] {
+    opacity: 0;
+    animation: anim-fallback 0.4s var(--ease-out) 2.5s forwards;
+  }
+  .js [data-anim="mask"]:not([data-anim-ready]) [data-anim-line] {
+    transform: translateY(110%);
+    animation: anim-fallback 0.4s var(--ease-out) 2.5s forwards;
+  }
+
+  /* Hero scroll cue: three gentle pulses, then still. */
+  .scroll-cue-line {
+    animation: cue-pulse 1.6s var(--ease-in-out) 1.6s 3;
+  }
+}
+
+@keyframes anim-fallback {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes cue-pulse {
+  0%, 100% { transform: scaleY(0.35); transform-origin: top; opacity: 0.4; }
+  50% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+}
+
+/* Skip link: hidden until focused. */
+.skip-link {
+  position: fixed;
+  left: 12px;
+  top: -64px;
+  z-index: 100;
+  border-radius: 9999px;
+  background: #09090b;
+  color: #fff;
+  padding: 12px 18px;
+  font-size: 14px;
+  transition: top 150ms var(--ease-out);
+}
+.skip-link:focus {
+  top: 12px;
 }

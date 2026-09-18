@@ -21,6 +21,7 @@ associated with national income?
 | Analysis only | `Rscript main_analysis.R` | R 4.x, internet |
 | Analysis **and** PDF report | `Rscript build_report.R` | R 4.x, internet, Edge or Chrome |
 | Dashboard (development) | `cd frontend` → `npm install` → `npm run dev`, then open http://localhost:3000 | Node.js 20+ |
+| Dashboard (production, static) | `cd frontend` → `npm run build` → `npm run start` (rebuild after re-running R) | Node.js 20+ |
 
 `build_report.R` runs `main_analysis.R` first, so `Rscript build_report.R` rebuilds every R output
 in one step. Missing R packages are installed automatically on first run. In RStudio, open
@@ -128,7 +129,7 @@ ggplot2 4.0.3, scales 1.4.0, plus base stats, graphics, grDevices and tools. The
 headless Microsoft Edge or Google Chrome, so no LaTeX or pandoc is needed.
 
 **Dashboard (Node.js 20+):** Next.js 16.2.9, React 19.2.4, TypeScript 5.9, Tailwind CSS 4.3,
-framer-motion 12, lenis 1.3, lucide-react 1.21. It is based on the supplied Estate/Next.js template.
+framer-motion 12, lenis 1.3, lucide-react 1.21, @radix-ui/react-dialog 1.1 (V2.1). It is based on the supplied Estate/Next.js template.
 
 ## Limitations (summary)
 

@@ -1,130 +1,94 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion } from "framer-motion";
-import { Maximize2, X } from "lucide-react";
-import { Reveal } from "@/components/reveal";
-import { Eyebrow } from "@/components/ui";
-import type { AnalysisSummary } from "@/lib/project-data";
+import { Maximize2 } from "lucide-react";
+import { FigureDialog, type ViewerFigure } from "@/components/figure-dialog";
+import { MaskText, Reveal } from "@/components/motion/primitives";
+import { Section, SectionHeading } from "@/components/ui";
 
-type Figure = AnalysisSummary["figures"][number];
+export type FigureChapter = ViewerFigure & { id: string; purpose: string; exists: boolean };
 
-const src = (f: Figure, version: string) => `/project/${f.file.split("/").pop()}?v=${version}`;
-
-function FigureCard({ figure, version, onOpen, wide = false }: { figure: Figure; version: string; onOpen: () => void; wide?: boolean }) {
-  return (
-    <figure className={`flex h-full flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white ${wide ? "lg:flex-row" : ""}`}>
-      <button
-        onClick={onOpen}
-        className={`group relative block bg-white ${wide ? "lg:w-3/5" : ""}`}
-        aria-label={`Open Figure ${figure.number} full screen`}
-      >
-        {figure.file_exists ? (
-          <Image src={src(figure, version)} alt={`Figure ${figure.number}: ${figure.title}`} width={1800} height={1200} className="h-auto w-full" />
-        ) : (
-          <div className="grid aspect-[3/2] place-items-center text-sm text-red-700">Figure file missing: re-run the R analysis</div>
-        )}
-        <span className="absolute right-3 top-3 grid size-8 place-items-center rounded-full bg-white/90 text-zinc-700 opacity-0 shadow ring-1 ring-zinc-200 transition group-hover:opacity-100 group-focus-visible:opacity-100">
-          <Maximize2 className="size-4" />
-        </span>
-      </button>
-      <figcaption className={`flex flex-1 flex-col border-t border-zinc-100 p-5 ${wide ? "lg:w-2/5 lg:border-l lg:border-t-0" : ""}`}>
-        <div className="flex items-center gap-2 text-[11px] font-medium tracking-[0.16em] text-zinc-400">
-          FIGURE {figure.number} · {figure.type.toUpperCase()}
-          {!figure.required && <span className="rounded-full bg-zinc-100 px-2 py-0.5 tracking-normal text-zinc-600">additional</span>}
-        </div>
-        <h3 className="mt-1.5 text-lg font-semibold leading-snug text-zinc-950">{figure.title}</h3>
-        <p className="mt-1 text-xs leading-5 text-zinc-500">{figure.purpose}</p>
-        <p className="mt-3 text-sm leading-6 text-zinc-700">{figure.interpretation}</p>
-      </figcaption>
-    </figure>
-  );
-}
-
-export function Figures({ figures, version }: { figures: Figure[]; version: string }) {
-  const [open, setOpen] = useState<Figure | null>(null);
-  const close = useCallback(() => setOpen(null), []);
-
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
-    window.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
-    };
-  }, [open, close]);
-
-  const required = figures.filter((f) => f.required);
-  const additional = figures.filter((f) => !f.required);
+/**
+ * Scene 05 (L2). The four required R figures as visual chapters:
+ * figure unmasks (desktop) or fades (mobile) -> caption -> interpretation.
+ * The PNGs are displayed exactly as exported by R; only their presentation moves.
+ */
+export function Figures({ figures }: { figures: FigureChapter[] }) {
+  const [viewer, setViewer] = useState<{ figure: ViewerFigure | null; open: boolean }>({ figure: null, open: false });
+  const openFigure = (figure: ViewerFigure) => setViewer({ figure, open: true });
 
   return (
-    <section id="figures" className="scroll-mt-20 bg-white px-4 py-20 md:px-16 md:py-24 lg:px-24">
-      <div className="mx-auto max-w-6xl">
-        <Reveal className="max-w-3xl">
-          <Eyebrow>REQUIRED VISUALISATIONS</Eyebrow>
-          <h2 className="mt-5 text-3xl leading-tight tracking-tight text-zinc-950 md:text-5xl">The four exam figures, exactly as R drew them</h2>
-          <p className="mt-4 text-sm leading-6 text-zinc-500 md:text-base md:leading-7">
-            These are the PNG files exported by ggplot2 in main_analysis.R, not browser re-drawings. Each interpretation is generated in
-            R from the calculated results, and the same text appears in the final report. Select a figure to view it full screen.
-          </p>
-        </Reveal>
+    <Section id="figures" tone="muted" labelledBy="figures-title">
+      <SectionHeading
+        id="figures-title"
+        scene="05"
+        eyebrow="REQUIRED VISUALISATIONS"
+        title="The four exam figures, exactly as R drew them"
+        intro="These are the PNG files exported by ggplot2 in main_analysis.R, not browser re-drawings. Each interpretation is generated in R from the results, and the same text appears in the final report."
+      />
 
-        <div className="mt-12 grid gap-5 md:grid-cols-2">
-          {required.map((f, i) => (
-            <Reveal key={f.id} delay={(i % 2) * 0.05}>
-              <FigureCard figure={f} version={version} onOpen={() => setOpen(f)} />
+      <div className="mt-16 space-y-20 md:space-y-28">
+        {figures.map((f, i) => (
+          <article key={f.id} aria-labelledby={`${f.id}-title`} className="grid gap-6 lg:grid-cols-12 lg:items-center lg:gap-12">
+            <Reveal variant="clip" className={`lg:col-span-7 ${i % 2 === 1 ? "lg:order-2" : ""}`}>
+              {f.exists ? (
+                <button
+                  type="button"
+                  onClick={() => openFigure(f)}
+                  className="group relative block w-full overflow-hidden rounded-2xl border border-zinc-200 bg-white p-2 text-left transition-[border-color,box-shadow] duration-150 hover:border-zinc-300 hover:shadow-sm md:p-3"
+                  aria-label={`Open Figure ${f.number}, ${f.title}, full screen`}
+                >
+                  <Image
+                    src={f.src}
+                    alt={`Figure ${f.number}: ${f.title}`}
+                    width={f.width}
+                    height={f.height}
+                    sizes="(min-width: 1024px) 56vw, 100vw"
+                    className="h-auto w-full transition-transform duration-[250ms] ease-out motion-safe:group-hover:scale-[1.01]"
+                  />
+                  <span className="absolute right-4 top-4 grid size-10 place-items-center rounded-full bg-white/95 text-zinc-700 opacity-0 shadow ring-1 ring-zinc-200 transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100">
+                    <Maximize2 aria-hidden className="size-4" />
+                  </span>
+                </button>
+              ) : (
+                <div className="grid aspect-[3/2] place-items-center rounded-2xl border border-red-200 bg-white text-sm text-red-700">
+                  {f.src.split("/").pop()?.split("?")[0]} is missing - re-run the R analysis
+                </div>
+              )}
             </Reveal>
-          ))}
-        </div>
 
-        {additional.length > 0 && (
-          <div className="mt-5 grid gap-5">
-            {additional.map((f) => (
-              <Reveal key={f.id}>
-                <FigureCard figure={f} version={version} onOpen={() => setOpen(f)} wide />
+            <div className={`lg:col-span-5 ${i % 2 === 1 ? "lg:order-1" : ""}`}>
+              <Reveal variant="fade" delay={0.12}>
+                <p className="flex items-center gap-3 text-xs font-medium tracking-[0.16em] text-zinc-500">
+                  <span aria-hidden className="text-3xl font-semibold tracking-tight text-zinc-300 tabular-nums">{String(f.number).padStart(2, "0")}</span>
+                  FIGURE {f.number} · {f.type.toUpperCase()}
+                </p>
               </Reveal>
-            ))}
-          </div>
-        )}
+              <h3 id={`${f.id}-title`} className="mt-3 text-2xl leading-tight tracking-tight text-zinc-950 md:text-3xl">
+                <MaskText lines={[f.title]} delay={0.16} />
+              </h3>
+              <Reveal delay={0.26}>
+                <p className="mt-3 text-sm leading-6 text-zinc-500">{f.purpose}</p>
+              </Reveal>
+              <Reveal delay={0.36}>
+                <p className="mt-5 border-l-2 border-[#2a78d6] pl-4 text-[15px] leading-7 text-zinc-700">{f.interpretation}</p>
+                {f.exists && (
+                  <button
+                    type="button"
+                    onClick={() => openFigure(f)}
+                    className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-full border border-zinc-300 px-4 text-sm text-zinc-800 transition-colors hover:bg-white"
+                  >
+                    <Maximize2 aria-hidden className="size-4" /> View full screen
+                  </button>
+                )}
+              </Reveal>
+            </div>
+          </article>
+        ))}
       </div>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            className="fixed inset-0 z-[60] flex items-center justify-center bg-zinc-950/85 p-3 backdrop-blur-sm md:p-8"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={close}
-            role="dialog"
-            aria-modal="true"
-            aria-label={`Figure ${open.number}: ${open.title}`}
-          >
-            <motion.div
-              className="relative max-h-full w-full max-w-6xl overflow-auto rounded-2xl bg-white p-3 md:p-5"
-              initial={{ scale: 0.97 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.97 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="mb-3 flex items-start justify-between gap-4">
-                <div>
-                  <div className="text-[11px] font-medium tracking-[0.16em] text-zinc-400">FIGURE {open.number}</div>
-                  <div className="text-base font-semibold text-zinc-950">{open.title}</div>
-                </div>
-                <button onClick={close} autoFocus className="rounded-full p-2 text-zinc-600 hover:bg-zinc-100" aria-label="Close">
-                  <X className="size-5" />
-                </button>
-              </div>
-              <Image src={src(open, version)} alt={`Figure ${open.number}: ${open.title}`} width={2000} height={1333} className="h-auto w-full" />
-              <p className="mt-3 max-w-4xl text-sm leading-6 text-zinc-600">{open.interpretation}</p>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </section>
+      <FigureDialog figure={viewer.figure} open={viewer.open} onOpenChange={(open) => setViewer((v) => ({ ...v, open }))} />
+    </Section>
   );
 }
