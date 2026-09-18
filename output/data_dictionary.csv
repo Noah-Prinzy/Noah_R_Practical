@@ -1,0 +1,14 @@
+variable,description,source,type,unit,missing
+country,Country or economy name as published by the World Bank,WDI country API: name,character,text,0
+iso3,ISO 3166-1 alpha-3 country code (unique key),WDI country API: id,character,code,0
+region,World Bank geographic region,WDI country API: region.value,factor,category,0
+income_level,World Bank income group (ordered Low -> High),WDI country API: incomeLevel.value,factor,ordered category,0
+gdp_per_capita_usd,GDP per capita,WDI indicator NY.GDP.PCAP.CD,numeric,current US$,0
+log10_gdp_per_capita,"Base-10 logarithm of GDP per capita (used for correlation, regression and plotting)",Derived in R,numeric,log10(current US$),0
+life_expectancy_years,"Life expectancy at birth, total",WDI indicator SP.DYN.LE00.IN,numeric,years,0
+population,Total population,WDI indicator SP.POP.TOTL,numeric,people,0
+population_millions,"Total population in millions (population / 1,000,000)",Derived in R,numeric,millions of people,0
+urban_pop_pct,Urban population as a share of total population,WDI indicator SP.URB.TOTL.IN.ZS,numeric,percent (0-100),0
+fertility_rate,Total fertility rate,WDI indicator SP.DYN.TFRT.IN,numeric,births per woman,0
+health_exp_per_capita_usd,Current health expenditure per capita,WDI indicator SH.XPD.CHEX.PC.CD,numeric,current US$,21
+co2_per_capita_t,"CO2 emissions per capita, excluding land use (LULUCF)",WDI indicator EN.GHG.CO2.PC.CE.AR5,numeric,tonnes CO2e per person,12

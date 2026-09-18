@@ -1,0 +1,1027 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-09-18T10:44:12+0300",
+  "project": {
+    "title": "R Programming and Data Web Extraction Practical",
+    "question": "How does life expectancy vary between countries, and how strongly is it associated with national income?",
+    "source": "World Bank Open Data - World Development Indicators (API v2)",
+    "source_url": "https://api.worldbank.org/v2/",
+    "data_year": 2022,
+    "extraction_date": "2026-09-18"
+  },
+  "dataset": {
+    "raw_rows": 295,
+    "raw_columns": 19,
+    "aggregates_removed": 78,
+    "duplicates_removed": 0,
+    "countries_dropped_missing": ["Cuba", "Eritrea", "Gibraltar", "St. Martin (French part)", "Korea, Dem. People's Rep.", "South Sudan", "British Virgin Islands", "Yemen, Rep."],
+    "observations": 209,
+    "variables": 13,
+    "numeric_variables": 9,
+    "indicators": 7,
+    "indicator_codes": {
+      "NY.GDP.PCAP.CD": "gdp_per_capita_usd",
+      "SP.DYN.LE00.IN": "life_expectancy_years",
+      "SP.POP.TOTL": "population",
+      "SP.URB.TOTL.IN.ZS": "urban_pop_pct",
+      "SP.DYN.TFRT.IN": "fertility_rate",
+      "SH.XPD.CHEX.PC.CD": "health_exp_per_capita_usd",
+      "EN.GHG.CO2.PC.CE.AR5": "co2_per_capita_t"
+    },
+    "total_missing_cells": 33,
+    "pct_missing_cells": 1.21457489878543,
+    "missing_by_variable": [
+      {
+        "variable": "country",
+        "missing": 0,
+        "pct_missing": 0
+      },
+      {
+        "variable": "iso3",
+        "missing": 0,
+        "pct_missing": 0
+      },
+      {
+        "variable": "region",
+        "missing": 0,
+        "pct_missing": 0
+      },
+      {
+        "variable": "income_level",
+        "missing": 0,
+        "pct_missing": 0
+      },
+      {
+        "variable": "gdp_per_capita_usd",
+        "missing": 0,
+        "pct_missing": 0
+      },
+      {
+        "variable": "log10_gdp_per_capita",
+        "missing": 0,
+        "pct_missing": 0
+      },
+      {
+        "variable": "life_expectancy_years",
+        "missing": 0,
+        "pct_missing": 0
+      },
+      {
+        "variable": "population",
+        "missing": 0,
+        "pct_missing": 0
+      },
+      {
+        "variable": "population_millions",
+        "missing": 0,
+        "pct_missing": 0
+      },
+      {
+        "variable": "urban_pop_pct",
+        "missing": 0,
+        "pct_missing": 0
+      },
+      {
+        "variable": "fertility_rate",
+        "missing": 0,
+        "pct_missing": 0
+      },
+      {
+        "variable": "health_exp_per_capita_usd",
+        "missing": 21,
+        "pct_missing": 10.0478
+      },
+      {
+        "variable": "co2_per_capita_t",
+        "missing": 12,
+        "pct_missing": 5.74163
+      }
+    ],
+    "cleaning_log": [
+      {
+        "step": "0. Raw data read",
+        "rows_after": 295,
+        "note": "All columns read as character"
+      },
+      {
+        "step": "1. Trim spaces / empty -> NA",
+        "rows_after": 295,
+        "note": "Removed trailing spaces (e.g. 'Sub-Saharan Africa '); blank cells set to NA"
+      },
+      {
+        "step": "2. Remove aggregates",
+        "rows_after": 217,
+        "note": "78 aggregate rows removed (e.g. 'World', 'Euro area')"
+      },
+      {
+        "step": "3. Remove duplicates",
+        "rows_after": 217,
+        "note": "0 duplicate rows removed"
+      },
+      {
+        "step": "4. Remove unnecessary columns",
+        "rows_after": 217,
+        "note": "Dropped: iso2, admin_region, lending_type, capital_city, longitude, latitude, data_year, extraction_date"
+      },
+      {
+        "step": "5. Standardise names",
+        "rows_after": 217,
+        "note": "API codes renamed to descriptive snake_case names"
+      },
+      {
+        "step": "6. Convert data types",
+        "rows_after": 217,
+        "note": "7 indicators -> numeric; region & income_level -> factor; 'Not classified' income -> NA"
+      },
+      {
+        "step": "7. Handle missing values",
+        "rows_after": 209,
+        "note": "8 countries lacking GDP per capita or life expectancy removed; other NAs retained (no imputation)"
+      },
+      {
+        "step": "8. Derive variables",
+        "rows_after": 209,
+        "note": "Added population_millions and log10_gdp_per_capita"
+      }
+    ]
+  },
+  "key_indicators": {
+    "countries": 209,
+    "life_expectancy_mean": 73.1070144007469,
+    "life_expectancy_median": 74.211,
+    "life_expectancy_sd": 7.94111694884215,
+    "life_expectancy_min": {
+      "country": "Central African Republic",
+      "value": 18.818
+    },
+    "life_expectancy_max": {
+      "country": "Monaco",
+      "value": 85.746
+    },
+    "gdp_per_capita_mean": 21200.8735714503,
+    "gdp_per_capita_median": 7655.59421024383,
+    "fertility_rate_mean": 2.40463388995215,
+    "fertility_rate_median": 1.949,
+    "pct_missing_cells": 1.21457489878543
+  },
+  "descriptive_statistics": [
+    {
+      "variable": "gdp_per_capita_usd",
+      "n": 209,
+      "missing": 0,
+      "mean": 21200.9,
+      "median": 7655.59,
+      "min": 301.832,
+      "max": 226052,
+      "sd": 31131.5
+    },
+    {
+      "variable": "life_expectancy_years",
+      "n": 209,
+      "missing": 0,
+      "mean": 73.107,
+      "median": 74.211,
+      "min": 18.818,
+      "max": 85.746,
+      "sd": 7.94112
+    },
+    {
+      "variable": "urban_pop_pct",
+      "n": 209,
+      "missing": 0,
+      "mean": 62.411,
+      "median": 63.4767,
+      "min": 14.6923,
+      "max": 100,
+      "sd": 23.1299
+    },
+    {
+      "variable": "fertility_rate",
+      "n": 209,
+      "missing": 0,
+      "mean": 2.40463,
+      "median": 1.949,
+      "min": 0.68,
+      "max": 6.255,
+      "sd": 1.2181
+    },
+    {
+      "variable": "health_exp_per_capita_usd",
+      "n": 188,
+      "missing": 21,
+      "mean": 1388.27,
+      "median": 450.24,
+      "min": 15.8581,
+      "max": 12586.2,
+      "sd": 2233.18
+    },
+    {
+      "variable": "co2_per_capita_t",
+      "n": 197,
+      "missing": 12,
+      "mean": 4.61555,
+      "median": 2.5919,
+      "min": 0,
+      "max": 78.7263,
+      "sd": 7.70343
+    }
+  ],
+  "group_analysis": {
+    "by_region": [
+      {
+        "region": "North America",
+        "countries": 3,
+        "mean_life_expectancy": 80.197,
+        "median_life_expectancy": 81.0949,
+        "median_gdp_per_capita": 78008.7,
+        "mean_fertility_rate": 1.4645,
+        "mean_urban_pct": 87.4609
+      },
+      {
+        "region": "Europe & Central Asia",
+        "countries": 57,
+        "mean_life_expectancy": 78.3589,
+        "median_life_expectancy": 78.769,
+        "median_gdp_per_capita": 24946.6,
+        "mean_fertility_rate": 1.63887,
+        "mean_urban_pct": 67.3657
+      },
+      {
+        "region": "Middle East, North Africa, Afghanistan & Pakistan",
+        "countries": 22,
+        "mean_life_expectancy": 75.8594,
+        "median_life_expectancy": 76.7305,
+        "median_gdp_per_capita": 4857.36,
+        "mean_fertility_rate": 2.46414,
+        "mean_urban_pct": 77.1493
+      },
+      {
+        "region": "Latin America & Caribbean",
+        "countries": 39,
+        "mean_life_expectancy": 74.4787,
+        "median_life_expectancy": 74.491,
+        "median_gdp_per_capita": 11405.8,
+        "mean_fertility_rate": 1.79554,
+        "mean_urban_pct": 68.6878
+      },
+      {
+        "region": "South Asia",
+        "countries": 6,
+        "mean_life_expectancy": 74.4773,
+        "median_life_expectancy": 73.5095,
+        "median_gdp_per_capita": 3029.56,
+        "mean_fertility_rate": 1.87,
+        "mean_urban_pct": 39.1195
+      },
+      {
+        "region": "East Asia & Pacific",
+        "countries": 36,
+        "mean_life_expectancy": 73.5878,
+        "median_life_expectancy": 72.2679,
+        "median_gdp_per_capita": 6682.84,
+        "mean_fertility_rate": 2.23069,
+        "mean_urban_pct": 62.2377
+      },
+      {
+        "region": "Sub-Saharan Africa",
+        "countries": 46,
+        "mean_life_expectancy": 63.1025,
+        "median_life_expectancy": 63.577,
+        "median_gdp_per_capita": 1341.51,
+        "mean_fertility_rate": 4.10863,
+        "mean_urban_pct": 45.4412
+      }
+    ],
+    "by_income": [
+      {
+        "income_level": "Low income",
+        "countries": 21,
+        "mean_life_expectancy": 61.0601,
+        "sd_life_expectancy": 10.5751,
+        "median_gdp_per_capita": 827.331,
+        "mean_fertility_rate": 4.68895
+      },
+      {
+        "income_level": "Lower middle income",
+        "countries": 47,
+        "mean_life_expectancy": 67.6928,
+        "sd_life_expectancy": 5.1889,
+        "median_gdp_per_capita": 2325.03,
+        "mean_fertility_rate": 3.22941
+      },
+      {
+        "income_level": "Upper middle income",
+        "countries": 58,
+        "mean_life_expectancy": 73.2678,
+        "sd_life_expectancy": 3.58124,
+        "median_gdp_per_capita": 6653.46,
+        "mean_fertility_rate": 2.07112
+      },
+      {
+        "income_level": "High income",
+        "countries": 83,
+        "mean_life_expectancy": 79.1086,
+        "sd_life_expectancy": 4.26849,
+        "median_gdp_per_capita": 35653.9,
+        "mean_fertility_rate": 1.59269
+      }
+    ]
+  },
+  "anova": {
+    "test": "One-way ANOVA: life_expectancy_years ~ region",
+    "f_statistic": 33.9592290532105,
+    "df_between": 6,
+    "df_within": 202,
+    "p_value": 3.43822141952668e-28,
+    "eta_squared": 0.502163094354829,
+    "welch_f": 21.8089681429305,
+    "welch_df": [6, 21.7728898410255],
+    "welch_p": 3.59573472232524e-08,
+    "welch_note": "Regional SDs range from 2.4 (North America) to 8.1 (Sub-Saharan Africa), so the equal-variance assumption is questionable. Welch's ANOVA, which does not assume equal variances, gives F(6, 21.8) = 21.8, p = 3.6e-08, so the conclusion is unchanged.",
+    "region_sd": [
+      {
+        "region": "Sub-Saharan Africa",
+        "sd": 8.09947,
+        "n": 46
+      },
+      {
+        "region": "East Asia & Pacific",
+        "sd": 6.43185,
+        "n": 36
+      },
+      {
+        "region": "Middle East, North Africa, Afghanistan & Pakistan",
+        "sd": 5.07583,
+        "n": 22
+      },
+      {
+        "region": "Europe & Central Asia",
+        "sd": 4.26298,
+        "n": 57
+      },
+      {
+        "region": "South Asia",
+        "sd": 3.93584,
+        "n": 6
+      },
+      {
+        "region": "Latin America & Caribbean",
+        "sd": 3.56124,
+        "n": 39
+      },
+      {
+        "region": "North America",
+        "sd": 2.44108,
+        "n": 3
+      }
+    ],
+    "interpretation": "Mean life expectancy differs significantly between regions (p = 3.4e-28); region accounts for 50% of the variation in life expectancy (eta-squared)."
+  },
+  "correlation": {
+    "variables": ["log10_gdp_per_capita", "life_expectancy_years"],
+    "pearson_raw": 0.57026578203591,
+    "pearson_log": 0.791599937163872,
+    "pearson_log_ci": [0.734829266205109, 0.837355990045658],
+    "pearson_log_p": 3.63136258039024e-46,
+    "spearman": 0.845840242547269,
+    "n": 209,
+    "strength": "strong positive",
+    "table": [
+      {
+        "pair": "GDP per capita vs life expectancy",
+        "method": "Pearson",
+        "r": 0.57026578203591,
+        "interpretation": "moderate positive"
+      },
+      {
+        "pair": "log10(GDP per capita) vs life expectancy",
+        "method": "Pearson",
+        "r": 0.791599937163872,
+        "interpretation": "strong positive"
+      },
+      {
+        "pair": "GDP per capita vs life expectancy",
+        "method": "Spearman (rank)",
+        "r": 0.845840242547269,
+        "interpretation": "very strong positive"
+      }
+    ],
+    "interpretation": "Richer countries tend to have longer life expectancy. The relationship is curved in dollars and close to linear on the log scale. It is an association, not evidence of causation."
+  },
+  "regression": {
+    "formula": "life_expectancy_years ~ log10_gdp_per_capita",
+    "method": "Ordinary least squares (lm)",
+    "why_log": "GDP per capita is strongly right-skewed; log10 makes the relationship approximately linear and the slope reads as years per ten-fold difference in GDP per capita.",
+    "n": 209,
+    "coefficients": [
+      {
+        "term": "Intercept",
+        "estimate": 34.4183,
+        "std_error": 2.10278,
+        "t_value": 16.368,
+        "p_value": 3.4659e-39,
+        "ci_low": 30.2727,
+        "ci_high": 38.5639
+      },
+      {
+        "term": "log10(GDP per capita)",
+        "estimate": 9.86356,
+        "std_error": 0.529191,
+        "t_value": 18.639,
+        "p_value": 3.63136e-46,
+        "ci_low": 8.82027,
+        "ci_high": 10.9069
+      }
+    ],
+    "r_squared": 0.626630460517847,
+    "adj_r_squared": 0.624826742935807,
+    "residual_se": 4.86404437896592,
+    "f_statistic": 347.41051856319,
+    "f_p_value": 3.63136258038987e-46,
+    "interpretation": "A ten-fold difference in GDP per capita is associated with 9.9 more years of life expectancy (95% CI 8.8 to 10.9). Association only: confounders such as healthcare access, education, infrastructure, demographics, environment and institutions are not modelled.",
+    "diagnostics": {
+      "cooks_threshold": 0.0191387559808612,
+      "leverage_threshold": 0.0191387559808612,
+      "influential": [
+        {
+          "country": "Central African Republic",
+          "life_expectancy_years": 18.818,
+          "std_residual": -8.72342,
+          "leverage": 0.0233606,
+          "cooks_d": 0.910109
+        },
+        {
+          "country": "Nigeria",
+          "life_expectancy_years": 54.079,
+          "std_residual": -2.98984,
+          "leverage": 0.00729061,
+          "cooks_d": 0.0328253
+        },
+        {
+          "country": "Chad",
+          "life_expectancy_years": 54.528,
+          "std_residual": -1.9335,
+          "leverage": 0.0151857,
+          "cooks_d": 0.028823
+        },
+        {
+          "country": "Greenland",
+          "life_expectancy_years": 71.2302,
+          "std_residual": -2.06796,
+          "leverage": 0.0128012,
+          "cooks_d": 0.0277269
+        },
+        {
+          "country": "Somalia, Fed. Rep.",
+          "life_expectancy_years": 53.931,
+          "std_residual": -1.59845,
+          "leverage": 0.0208257,
+          "cooks_d": 0.0271712
+        },
+        {
+          "country": "Syrian Arab Republic",
+          "life_expectancy_years": 72.79,
+          "std_residual": 1.76939,
+          "leverage": 0.0143384,
+          "cooks_d": 0.0227713
+        },
+        {
+          "country": "Naoero",
+          "life_expectancy_years": 61.93,
+          "std_residual": -2.83832,
+          "leverage": 0.00560081,
+          "cooks_d": 0.0226873
+        },
+        {
+          "country": "Afghanistan",
+          "life_expectancy_years": 65.617,
+          "std_residual": 1.25411,
+          "leverage": 0.0269816,
+          "cooks_d": 0.0218066
+        }
+      ],
+      "n_high_leverage": 13,
+      "large_residuals": ["Central African Republic"],
+      "shapiro_w": 0.798582871076156,
+      "shapiro_p": 1.05050346709687e-15,
+      "residual_skewness": -3.31468976871249,
+      "curvature_p": 0.0241132452299068,
+      "notes": ["Adding a squared log-GDP term improves the fit (F-test p = 0.024), so some curvature remains even on the log scale; the straight line is a useful summary rather than an exact form.", "Residuals depart from normality (Shapiro-Wilk p = 1.1e-15; skewness -3.31, a longer tail of countries far BELOW the fitted line), so p-values and confidence intervals should be read as approximate. With n = 209 the coefficient estimates themselves remain informative."]
+    }
+  },
+  "outliers": {
+    "method": "1.5 x IQR rule (Q1 - 1.5 IQR, Q3 + 1.5 IQR); outliers reported and retained",
+    "variables": [
+      {
+        "variable": "gdp_per_capita_usd",
+        "q1": 2899.16047469267,
+        "q3": 28360.3041467268,
+        "iqr": 25461.1436720341,
+        "lower_bound": -35292.5550333585,
+        "upper_bound": 66552.019654778,
+        "n_outliers": 16,
+        "n_low": 0,
+        "n_high": 16,
+        "countries": [
+          {
+            "country": "Monaco",
+            "region": "Europe & Central Asia",
+            "value": 226052
+          },
+          {
+            "country": "Liechtenstein",
+            "region": "Europe & Central Asia",
+            "value": 188055
+          },
+          {
+            "country": "Luxembourg",
+            "region": "Europe & Central Asia",
+            "value": 123720
+          },
+          {
+            "country": "Bermuda",
+            "region": "North America",
+            "value": 119969
+          },
+          {
+            "country": "Norway",
+            "region": "Europe & Central Asia",
+            "value": 113122
+          },
+          {
+            "country": "Ireland",
+            "region": "Europe & Central Asia",
+            "value": 105191
+          },
+          {
+            "country": "Switzerland",
+            "region": "Europe & Central Asia",
+            "value": 97809.1
+          },
+          {
+            "country": "Cayman Islands",
+            "region": "Latin America & Caribbean",
+            "value": 92937.9
+          },
+          {
+            "country": "Singapore",
+            "region": "East Asia & Pacific",
+            "value": 91227.7
+          },
+          {
+            "country": "Qatar",
+            "region": "Middle East, North Africa, Afghanistan & Pakistan",
+            "value": 88701.5
+          },
+          {
+            "country": "Isle of Man",
+            "region": "Europe & Central Asia",
+            "value": 88328.5
+          },
+          {
+            "country": "United States",
+            "region": "North America",
+            "value": 78008.7
+          },
+          {
+            "country": "Iceland",
+            "region": "Europe & Central Asia",
+            "value": 76377
+          },
+          {
+            "country": "Denmark",
+            "region": "Europe & Central Asia",
+            "value": 67781.1
+          },
+          {
+            "country": "Channel Islands",
+            "region": "Europe & Central Asia",
+            "value": 67627.1
+          },
+          {
+            "country": "Faroe Islands",
+            "region": "Europe & Central Asia",
+            "value": 67069.4
+          }
+        ]
+      },
+      {
+        "variable": "life_expectancy_years",
+        "q1": 67.713,
+        "q3": 78.531,
+        "iqr": 10.818,
+        "lower_bound": 51.486,
+        "upper_bound": 94.758,
+        "n_outliers": 1,
+        "n_low": 1,
+        "n_high": 0,
+        "countries": [
+          {
+            "country": "Central African Republic",
+            "region": "Sub-Saharan Africa",
+            "value": 18.818
+          }
+        ]
+      },
+      {
+        "variable": "fertility_rate",
+        "q1": 1.512,
+        "q3": 3.127,
+        "iqr": 1.615,
+        "lower_bound": -0.910499999999999,
+        "upper_bound": 5.5495,
+        "n_outliers": 6,
+        "n_low": 0,
+        "n_high": 6,
+        "countries": [
+          {
+            "country": "Somalia, Fed. Rep.",
+            "region": "Sub-Saharan Africa",
+            "value": 6.255
+          },
+          {
+            "country": "Chad",
+            "region": "Sub-Saharan Africa",
+            "value": 6.215
+          },
+          {
+            "country": "Niger",
+            "region": "Sub-Saharan Africa",
+            "value": 6.135
+          },
+          {
+            "country": "Congo, Dem. Rep.",
+            "region": "Sub-Saharan Africa",
+            "value": 6.106
+          },
+          {
+            "country": "Central African Republic",
+            "region": "Sub-Saharan Africa",
+            "value": 6.023
+          },
+          {
+            "country": "Mali",
+            "region": "Sub-Saharan Africa",
+            "value": 5.692
+          }
+        ]
+      }
+    ],
+    "total_flagged": 23,
+    "life_expectancy_history": [
+      {
+        "country": "Central African Republic",
+        "year": 2015,
+        "life_expectancy": 51.934
+      },
+      {
+        "country": "Central African Republic",
+        "year": 2016,
+        "life_expectancy": 50.999
+      },
+      {
+        "country": "Central African Republic",
+        "year": 2017,
+        "life_expectancy": 45.231
+      },
+      {
+        "country": "Central African Republic",
+        "year": 2018,
+        "life_expectancy": 52.297
+      },
+      {
+        "country": "Central African Republic",
+        "year": 2019,
+        "life_expectancy": 31.53
+      },
+      {
+        "country": "Central African Republic",
+        "year": 2020,
+        "life_expectancy": 50.596
+      },
+      {
+        "country": "Central African Republic",
+        "year": 2021,
+        "life_expectancy": 40.279
+      },
+      {
+        "country": "Central African Republic",
+        "year": 2022,
+        "life_expectancy": 18.818
+      },
+      {
+        "country": "Central African Republic",
+        "year": 2023,
+        "life_expectancy": 57.408
+      }
+    ]
+  },
+  "sensitivity": {
+    "scenarios": [
+      {
+        "scenario": "All countries (baseline)",
+        "n": 209,
+        "excluded": "none",
+        "pearson_r_log_gdp": 0.7916,
+        "spearman_rho": 0.84584,
+        "slope": 9.86356,
+        "r_squared": 0.62663,
+        "strength": "strong positive"
+      },
+      {
+        "scenario": "Excluding life-expectancy IQR outliers",
+        "n": 208,
+        "excluded": "Central African Republic",
+        "pearson_r_log_gdp": 0.833688,
+        "spearman_rho": 0.843677,
+        "slope": 9.2269,
+        "r_squared": 0.695036,
+        "strength": "very strong positive"
+      },
+      {
+        "scenario": "Excluding GDP-per-capita IQR outliers",
+        "n": 193,
+        "excluded": "16 high-income economies",
+        "pearson_r_log_gdp": 0.766491,
+        "spearman_rho": 0.816255,
+        "slope": 10.3343,
+        "r_squared": 0.587508,
+        "strength": "strong positive"
+      },
+      {
+        "scenario": "Excluding influential points (Cook's D > 4/n)",
+        "n": 201,
+        "excluded": "8 countries",
+        "pearson_r_log_gdp": 0.858777,
+        "spearman_rho": 0.859263,
+        "slope": 9.19788,
+        "r_squared": 0.737498,
+        "strength": "very strong positive"
+      }
+    ],
+    "conclusion": "Across the 4 scenarios Pearson r (log GDP) ranges from 0.766 to 0.859 (largest change from the baseline 0.792: 0.067) and the slope from 9.2 to 10.3 years per ten-fold GDP. The direction is unchanged but the strength label varies (strong positive / very strong positive), so the size of the association depends partly on unusual countries."
+  },
+  "figures": [
+    {
+      "id": "figure1",
+      "number": 1,
+      "file": "figures/figure1.png",
+      "required": true,
+      "type": "Bar chart",
+      "title": "Mean life expectancy by World Bank income group",
+      "purpose": "Compares the average of a numeric variable across the ordered categories of a grouping variable.",
+      "interpretation": "Mean life expectancy rises at every step with income group, from 61.1 years in low-income countries to 79.1 years in high-income countries, a gap of 18 years. Each step up the income ladder adds between 5.6 and 6.6 years on average. The low-income group is the smallest (n = 21) and most variable (SD 10.6 years), so its mean is the least precise.",
+      "file_exists": true
+    },
+    {
+      "id": "figure2",
+      "number": 2,
+      "file": "figures/figure2.png",
+      "required": true,
+      "type": "Histogram",
+      "title": "Distribution of life expectancy at birth",
+      "purpose": "Shows the shape, centre and spread of the main outcome variable.",
+      "interpretation": "The distribution is left-skewed: 49% of countries fall between 70 and 80 years, and the mean (73.1) sits below the median (74.2). Only 5 countries are below 60 years; the isolated bar at 18.8 years is Central African Republic, the outlier discussed in the outlier analysis.",
+      "file_exists": true
+    },
+    {
+      "id": "figure3",
+      "number": 3,
+      "file": "figures/figure3.png",
+      "required": true,
+      "type": "Scatter plot",
+      "title": "GDP per capita (log scale) vs life expectancy",
+      "purpose": "Shows the relationship between the two numeric variables used in the correlation and regression analyses.",
+      "interpretation": "Points rise from lower left to upper right, a strong positive association (r = 0.79 on log GDP), and the income-group colours follow the same gradient. Scatter around the line is widest in the low income group (residual SD 10.2 years), so income alone predicts life expectancy least well there. Some countries sit well below the line for their income, e.g. Naoero, a high-income economy at 61.9 years.",
+      "file_exists": true
+    },
+    {
+      "id": "figure4",
+      "number": 4,
+      "file": "figures/figure4.png",
+      "required": true,
+      "type": "Boxplot",
+      "title": "Life expectancy by World Bank region",
+      "purpose": "Compares the full distribution (median, quartiles, spread, extremes) of a numeric variable across categories.",
+      "interpretation": "Sub-Saharan Africa's median life expectancy (63.6 years) is about 9 years below the next-lowest region (East Asia & Pacific, 72.3 years), and its whole box sits below every other region's box. East Asia & Pacific shows the widest interquartile range (9.9 years). North America has only 3 countries, so its box should be read with care.",
+      "file_exists": true
+    },
+    {
+      "id": "figure5",
+      "number": 5,
+      "file": "figures/figure5_regression_diagnostics.png",
+      "required": false,
+      "type": "Regression diagnostics",
+      "title": "Model assumptions and influential countries (additional)",
+      "purpose": "Checks the assumptions of the log-GDP regression model: linearity, residual normality and influential observations.",
+      "interpretation": "Adding a squared log-GDP term improves the fit (F-test p = 0.024), so some curvature remains even on the log scale; the straight line is a useful summary rather than an exact form. Residuals depart from normality (Shapiro-Wilk p = 1.1e-15; skewness -3.31, a longer tail of countries far BELOW the fitted line), so p-values and confidence intervals should be read as approximate. With n = 209 the coefficient estimates themselves remain informative. 8 countries exceed the Cook's distance screening line (4/n), led by Central African Republic, Nigeria, Chad; removing them changes r from 0.792 to 0.859 (see the sensitivity analysis).",
+      "file_exists": true
+    }
+  ],
+  "section_a": {
+    "students": [
+      {
+        "Student": "Alice",
+        "Gender": "Female",
+        "Age": 21,
+        "Programme": "Computer Science",
+        "Score": 78,
+        "Attendance": 92,
+        "Grade": "B"
+      },
+      {
+        "Student": "Brian",
+        "Gender": "Male",
+        "Age": 23,
+        "Programme": "Data Science",
+        "Score": 65,
+        "Attendance": 81,
+        "Grade": "C"
+      },
+      {
+        "Student": "Charles",
+        "Gender": "Male",
+        "Age": 22,
+        "Programme": "Computer Science",
+        "Score": 55,
+        "Attendance": 76,
+        "Grade": "D"
+      },
+      {
+        "Student": "Diana",
+        "Gender": "Female",
+        "Age": 20,
+        "Programme": "Information Systems",
+        "Score": 88,
+        "Attendance": 95,
+        "Grade": "A"
+      },
+      {
+        "Student": "Edward",
+        "Gender": "Male",
+        "Age": 24,
+        "Programme": "Data Science",
+        "Score": 72,
+        "Attendance": 84,
+        "Grade": "B"
+      },
+      {
+        "Student": "Faith",
+        "Gender": "Female",
+        "Age": 21,
+        "Programme": "Computer Science",
+        "Score": 91,
+        "Attendance": 97,
+        "Grade": "A"
+      },
+      {
+        "Student": "George",
+        "Gender": "Male",
+        "Age": 22,
+        "Programme": "Information Systems",
+        "Score": 48,
+        "Attendance": 68,
+        "Grade": "F"
+      },
+      {
+        "Student": "Hannah",
+        "Gender": "Female",
+        "Age": 23,
+        "Programme": "Data Science",
+        "Score": 83,
+        "Attendance": 89,
+        "Grade": "A"
+      },
+      {
+        "Student": "Isaac",
+        "Gender": "Male",
+        "Age": 20,
+        "Programme": "Computer Science",
+        "Score": 61,
+        "Attendance": 79,
+        "Grade": "C"
+      },
+      {
+        "Student": "Jane",
+        "Gender": "Female",
+        "Age": 22,
+        "Programme": "Information Systems",
+        "Score": 74,
+        "Attendance": 86,
+        "Grade": "B"
+      }
+    ],
+    "score_statistics": [
+      {
+        "Statistic": "Mean",
+        "Value": 71.5
+      },
+      {
+        "Statistic": "Median",
+        "Value": 73
+      },
+      {
+        "Statistic": "Highest",
+        "Value": 91
+      },
+      {
+        "Statistic": "Lowest",
+        "Value": 48
+      },
+      {
+        "Statistic": "Standard deviation",
+        "Value": 14.1833235409289
+      }
+    ],
+    "programme_averages": [
+      {
+        "Programme": "Data Science",
+        "Students": 3,
+        "Average_Score": 73.33
+      },
+      {
+        "Programme": "Computer Science",
+        "Students": 4,
+        "Average_Score": 71.25
+      },
+      {
+        "Programme": "Information Systems",
+        "Students": 3,
+        "Average_Score": 70
+      }
+    ],
+    "overall_average": 71.5,
+    "above_average": [
+      {
+        "Student": "Faith",
+        "Programme": "Computer Science",
+        "Score": 91,
+        "Grade": "A"
+      },
+      {
+        "Student": "Diana",
+        "Programme": "Information Systems",
+        "Score": 88,
+        "Grade": "A"
+      },
+      {
+        "Student": "Hannah",
+        "Programme": "Data Science",
+        "Score": 83,
+        "Grade": "A"
+      },
+      {
+        "Student": "Alice",
+        "Programme": "Computer Science",
+        "Score": 78,
+        "Grade": "B"
+      },
+      {
+        "Student": "Jane",
+        "Programme": "Information Systems",
+        "Score": 74,
+        "Grade": "B"
+      },
+      {
+        "Student": "Edward",
+        "Programme": "Data Science",
+        "Score": 72,
+        "Grade": "B"
+      }
+    ]
+  },
+  "limitations": [
+    {
+      "title": "Cross-sectional design",
+      "text": "The analysis uses one year (2022) of country-level data, so it shows how countries differ at a point in time; it cannot establish temporal ordering or causal effects."
+    },
+    {
+      "title": "Country-level (ecological) inference",
+      "text": "Relationships between country averages do not necessarily hold for individuals within countries, and small territories count equally with populous countries."
+    },
+    {
+      "title": "Missing data",
+      "text": "8 countries were removed because GDP per capita or life expectancy was missing (Cuba; Eritrea; Gibraltar; St. Martin (French part); Korea, Dem. People's Rep.; South Sudan; British Virgin Islands; Yemen, Rep.). Their income groups are: Low income 4, Upper middle income 1, High income 3, so the missing cases are not a random sample and the cleaned data may under-represent some settings (50% of the dropped countries are low income vs 10% of the analysed countries). 21 health-expenditure and 12 CO2 values are also missing and were excluded pairwise."
+    },
+    {
+      "title": "Confounding",
+      "text": "GDP per capita and life expectancy are both linked to healthcare access, education, public infrastructure, demographics, environmental conditions and institutional quality. These are possible explanations for the association, not mechanisms tested here."
+    },
+    {
+      "title": "Outliers and influential observations",
+      "text": "Extreme observations - notably Central African Republic at 18.8 years - can shift correlations and regression estimates. The sensitivity analysis shows how much: Across the 4 scenarios Pearson r (log GDP) ranges from 0.766 to 0.859 (largest change from the baseline 0.792: 0.067) and the slope from 9.2 to 10.3 years per ten-fold GDP. The direction is unchanged but the strength label varies (strong positive / very strong positive), so the size of the association depends partly on unusual countries."
+    },
+    {
+      "title": "Source revisions",
+      "text": "World Bank WDI values are revised as new estimates arrive. Re-running the extraction later may give slightly different numbers than the 2026-09-18 extraction reported here; the code, source, year and extraction date are recorded so the method is reproducible."
+    }
+  ],
+  "automated_summary": ["Data: 295 economies were extracted from the World Bank API on 2026-09-18; after removing 78 aggregates and 8 countries missing core values, 209 countries and 13 variables remain.", "Missingness: 33 of 2717 cells (1.21%) are missing in the cleaned data, all in health_exp_per_capita_usd (21) and co2_per_capita_t (12); core variables are complete.", "Life expectancy (2022): mean 73.1 years, median 74.2, ranging from 18.8 (Central African Republic) to 85.7 (Monaco), SD 7.9.", "GDP per capita: mean US$21,201 but median only US$7,656 - a strongly right-skewed distribution (min US$302 in Burundi, max US$226,052 in Monaco).", "Groups: mean life expectancy is highest in North America (80.2 yrs) and lowest in Sub-Saharan Africa (63.1 yrs); high-income countries average 79.1 yrs vs 61.1 yrs for low-income countries (gap 18.0 yrs). ANOVA across regions: F(6, 202) = 34.0, p = 3.4e-28, eta-squared = 0.50.", "Correlation: log GDP per capita and life expectancy show a strong positive correlation (Pearson r = 0.79, 95% CI 0.73 to 0.84, p = 3.6e-46; Spearman rho = 0.85). This is an association, not proof of causation.", "Regression: each ten-fold increase in GDP per capita is associated with 9.9 more years of life expectancy (95% CI 8.8 to 10.9, p = 3.6e-46); R^2 = 0.63, adjusted R^2 = 0.62.", "Outliers (1.5 x IQR rule): 16 high GDP-per-capita outlier(s) above US$66,552, 1 low life-expectancy outlier(s) below 51.5 years (Central African Republic) and 6 high fertility outlier(s); all were retained.", "Sensitivity: Across the 4 scenarios Pearson r (log GDP) ranges from 0.766 to 0.859 (largest change from the baseline 0.792: 0.067) and the slope from 9.2 to 10.3 years per ten-fold GDP. The direction is unchanged but the strength label varies (strong positive / very strong positive), so the size of the association depends partly on unusual countries.", "Outputs: 4 required figures and 1 additional figure generated; automated data QA PASS (28 of 28 completed checks passed; the final-report check runs once the PDF is built)."],
+  "validation": {
+    "status": "PASS",
+    "checks_total": 29,
+    "checks_passed": 29,
+    "checks_failed": 0,
+    "checks_pending": 0
+  }
+}

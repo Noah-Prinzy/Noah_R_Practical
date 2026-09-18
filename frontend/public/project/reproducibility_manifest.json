@@ -1,0 +1,145 @@
+{
+  "schema_version": "1.0",
+  "run_started": "2026-09-18T10:44:02+0300",
+  "run_finished": "2026-09-18T10:44:12+0300",
+  "extraction_date": "2026-09-18",
+  "data_year": 2022,
+  "r_version": "R version 4.6.1 (2026-06-24 ucrt)",
+  "platform": "x86_64-w64-mingw32",
+  "os": "Windows",
+  "os_release": "10 x64",
+  "random_seed": 2026,
+  "packages": [
+    {
+      "package": "jsonlite",
+      "version": "2.0.0"
+    },
+    {
+      "package": "dplyr",
+      "version": "1.2.1"
+    },
+    {
+      "package": "tidyr",
+      "version": "1.3.2"
+    },
+    {
+      "package": "stringr",
+      "version": "1.6.0"
+    },
+    {
+      "package": "readr",
+      "version": "2.2.0"
+    },
+    {
+      "package": "ggplot2",
+      "version": "4.0.3"
+    },
+    {
+      "package": "scales",
+      "version": "1.4.0"
+    },
+    {
+      "package": "stats",
+      "version": "4.6.1"
+    },
+    {
+      "package": "graphics",
+      "version": "4.6.1"
+    },
+    {
+      "package": "grDevices",
+      "version": "4.6.1"
+    },
+    {
+      "package": "tools",
+      "version": "4.6.1"
+    }
+  ],
+  "source": {
+    "name": "World Bank Open Data - World Development Indicators (API v2)",
+    "base_url": "https://api.worldbank.org/v2/",
+    "country_endpoint": "https://api.worldbank.org/v2/country?format=json&per_page=400",
+    "indicator_endpoint": "https://api.worldbank.org/v2/country/all/indicator/<CODE>?format=json&date=2022&per_page=400",
+    "indicators": {
+      "NY.GDP.PCAP.CD": "gdp_per_capita_usd",
+      "SP.DYN.LE00.IN": "life_expectancy_years",
+      "SP.POP.TOTL": "population",
+      "SP.URB.TOTL.IN.ZS": "urban_pop_pct",
+      "SP.DYN.TFRT.IN": "fertility_rate",
+      "SH.XPD.CHEX.PC.CD": "health_exp_per_capita_usd",
+      "EN.GHG.CO2.PC.CE.AR5": "co2_per_capita_t"
+    },
+    "year_rationale": "2022 = best joint coverage of all seven indicators among the 2021-2023 vintages when the source was selected",
+    "error_handling": "Each request is retried up to 3 times with a growing pause; empty responses and World Bank error messages stop the run with an explanation"
+  },
+  "raw_dimensions": {
+    "rows": 295,
+    "columns": 19
+  },
+  "clean_dimensions": {
+    "rows": 209,
+    "columns": 13
+  },
+  "figures_generated": {
+    "required": 4,
+    "additional": 1
+  },
+  "outputs": [
+    {
+      "file": "web_extracted_data.csv",
+      "exists": true,
+      "bytes": 60174,
+      "md5": "f5743f557ea0240aff237e1fac69594e"
+    },
+    {
+      "file": "cleaned_data.csv",
+      "exists": true,
+      "bytes": 34476,
+      "md5": "95c3e34f969843ef85629bf36e56c093"
+    },
+    {
+      "file": "figures/figure1.png",
+      "exists": true,
+      "bytes": 46974,
+      "md5": "d4920738e7ee8f761898f67886968a5e"
+    },
+    {
+      "file": "figures/figure2.png",
+      "exists": true,
+      "bytes": 42274,
+      "md5": "d9d408cf43b43813c68e86fa57a28839"
+    },
+    {
+      "file": "figures/figure3.png",
+      "exists": true,
+      "bytes": 77426,
+      "md5": "0465bcb463d42d15b6aa7da80dbf14c7"
+    },
+    {
+      "file": "figures/figure4.png",
+      "exists": true,
+      "bytes": 45068,
+      "md5": "285e98dae4bdefb065f4652db2509378"
+    },
+    {
+      "file": "figures/figure5_regression_diagnostics.png",
+      "exists": true,
+      "bytes": 68167,
+      "md5": "c4711d14e8ecd9b80ac00cd5bae50f4f"
+    },
+    {
+      "file": "output/data_dictionary.csv",
+      "exists": true,
+      "bytes": 1436,
+      "md5": "10e3267481cfa1b4f70d0e32386939ae"
+    },
+    {
+      "file": "final_report.pdf",
+      "exists": true,
+      "bytes": 701166,
+      "md5": "26524dbbba654dad5d27da2082bde555"
+    }
+  ],
+  "reproducibility_note": "The code is fully reproducible: running `Rscript build_report.R` (or main_analysis.R for the analysis only) re-extracts, cleans, analyses and re-exports everything using relative paths and a fixed seed. The data are fetched live from the World Bank API, which revises WDI values over time, so a later run may return slightly different numbers; the extraction date, data year, indicator codes and file checksums recorded here identify exactly which vintage produced these outputs.",
+  "report_built": "2026-09-18T10:44:18+0300"
+}

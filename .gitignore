@@ -1,0 +1,28 @@
+# Dependencies and build output (frontend/.gitignore covers these too)
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+
+# Environment / deployment config - never commit secrets
+.env
+.env.*
+.vercel/
+.netlify/
+
+# R session and temporary files
+.Rhistory
+.RData
+.Rproj.user/
+Rplots.pdf
+final_report.html
+
+# Archives, OS and editor files
+*.zip
+.DS_Store
+Thumbs.db
+desktop.ini
+.claude/
+
+# Generated outputs (CSV, PNG, PDF, JSON in output/ and frontend/public/project/)
+# are intentionally committed: they are exam deliverables and the static site needs them.

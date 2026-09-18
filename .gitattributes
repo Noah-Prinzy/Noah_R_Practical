@@ -1,0 +1,12 @@
+# Default: normal text handling (specific rules below override this)
+*      text=auto
+
+# Generated data files must stay byte-identical: their MD5 checksums are recorded in
+# output/reproducibility_manifest.json, so Git must never rewrite their line endings.
+*.csv  -text
+*.json -text
+*.png  binary
+*.pdf  binary
+
+# Windows batch files need CRLF line endings to run reliably in cmd.exe
+*.bat  text eol=crlf
