@@ -2,7 +2,7 @@ import { Download, ExternalLink, FileText } from "lucide-react";
 import { Reveal } from "@/components/motion/primitives";
 import { Card, RollButton, Section, SectionHeading } from "@/components/ui";
 import type { AnalysisSummary, Manifest } from "@/lib/project-data";
-import { dateLabel } from "@/lib/format";
+import { dateLabel, prettyVariable } from "@/lib/format";
 
 export function Reproducibility({ summary, manifest, reportAvailable }: { summary: AnalysisSummary; manifest: Manifest; reportAvailable: boolean }) {
   const facts: [string, string][] = [
@@ -61,8 +61,8 @@ export function Reproducibility({ summary, manifest, reportAvailable }: { summar
               ))}
             </dl>
             <p className="mt-4 text-xs leading-5 text-zinc-500">{manifest.reproducibility_note}</p>
-            <a href={manifest.source.base_url} target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center gap-1.5 text-sm text-[#1c5cab] hover:underline">
-              World Bank API <ExternalLink className="size-3.5" />
+            <a href="#sources" className="mt-4 inline-flex min-h-11 items-center gap-1.5 text-sm text-[#1c5cab] hover:underline">
+              Data sources and exact API queries ↓
             </a>
           </Card>
         </Reveal>
@@ -95,6 +95,87 @@ export function Reproducibility({ summary, manifest, reportAvailable }: { summar
           </Card>
         </Reveal>
       </div>
+
+      <DataSources manifest={manifest} />
     </Section>
+  );
+}
+
+const WDI_DATABASE = "https://databank.worldbank.org/source/world-development-indicators";
+const API_DOCS = "https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation";
+
+/**
+ * Where every number came from. Built from the manifest R wrote, so the links always
+ * match the indicators and year that were actually extracted. The API root
+ * (api.worldbank.org/v2/) is not browsable, so each link is a real, working query.
+ */
+function DataSources({ manifest }: { manifest: Manifest }) {
+  const indicators = Object.entries(manifest.source.indicators);
+  const apiQuery = (code: string) => manifest.source.indicator_endpoint.replace("<CODE>", code);
+  const link = "inline-flex min-h-11 items-center gap-1.5 text-[#1c5cab] hover:underline";
+
+  return (
+    <Reveal className="mt-5" id="sources">
+      <Card>
+        <h3 className="text-base font-semibold text-zinc-950">Data sources</h3>
+        <p className="mt-1 max-w-3xl text-sm leading-6 text-zinc-600">
+          All country data come from the {manifest.source.name}, year {manifest.data_year}, extracted on {manifest.extraction_date}. For each
+          indicator: the official World Bank page, and the exact API query main_analysis.R ran (it opens as raw JSON, the same data R received).
+        </p>
+        <div className="mt-4 -mx-1 overflow-x-auto">
+          <table className="w-full min-w-[560px] text-sm">
+            <caption className="sr-only">World Bank indicators used, with source pages and API queries</caption>
+            <thead>
+              <tr className="border-b border-zinc-200 text-left text-xs text-zinc-500">
+                <th scope="col" className="px-1 py-2.5 font-medium">Indicator</th>
+                <th scope="col" className="px-1 py-2.5 font-medium">World Bank code</th>
+                <th scope="col" className="px-1 py-2.5 font-medium">Official page</th>
+                <th scope="col" className="px-1 py-2.5 font-medium">API query ({manifest.data_year})</th>
+              </tr>
+            </thead>
+            <tbody>
+              {indicators.map(([code, variable]) => (
+                <tr key={code} className="border-b border-zinc-100 last:border-0">
+                  <td className="px-1 py-1 text-zinc-900">{prettyVariable(variable)}</td>
+                  <td className="px-1 py-1 font-mono text-xs text-zinc-700">{code}</td>
+                  <td className="px-1 py-1">
+                    <a href={`https://data.worldbank.org/indicator/${code}`} target="_blank" rel="noreferrer" className={link}>
+                      data.worldbank.org <ExternalLink aria-hidden className="size-3.5" />
+                    </a>
+                  </td>
+                  <td className="px-1 py-1">
+                    <a href={apiQuery(code)} target="_blank" rel="noreferrer" className={link}>
+                      JSON <ExternalLink aria-hidden className="size-3.5" />
+                    </a>
+                  </td>
+                </tr>
+              ))}
+              <tr>
+                <td className="px-1 py-1 text-zinc-900">Country names, regions and income groups</td>
+                <td className="px-1 py-1 font-mono text-xs text-zinc-700">country metadata</td>
+                <td className="px-1 py-1">
+                  <a href="https://data.worldbank.org/country" target="_blank" rel="noreferrer" className={link}>
+                    data.worldbank.org <ExternalLink aria-hidden className="size-3.5" />
+                  </a>
+                </td>
+                <td className="px-1 py-1">
+                  <a href={manifest.source.country_endpoint} target="_blank" rel="noreferrer" className={link}>
+                    JSON <ExternalLink aria-hidden className="size-3.5" />
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div className="mt-4 flex flex-wrap gap-x-6 text-sm">
+          <a href={WDI_DATABASE} target="_blank" rel="noreferrer" className={link}>
+            World Development Indicators database <ExternalLink aria-hidden className="size-3.5" />
+          </a>
+          <a href={API_DOCS} target="_blank" rel="noreferrer" className={link}>
+            World Bank API documentation <ExternalLink aria-hidden className="size-3.5" />
+          </a>
+        </div>
+      </Card>
+    </Reveal>
   );
 }
